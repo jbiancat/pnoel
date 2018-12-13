@@ -12,7 +12,8 @@ public class Enfant {
         int now = Calendar.getInstance().get(Calendar.YEAR);
         this.anneeNaissance = aN;
         this.age = now - this.anneeNaissance;
-        this.sexe=s;
+        this.prenom = p;
+        this.sexe = s;
     }
 
     public int getAge() {
@@ -45,5 +46,12 @@ public class Enfant {
 
     public void setSexe(String sexe) {
         this.sexe = sexe;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getPrenom() + " " + this.getAnneeNaissance() + " " + this.getSexe());
+        return sb.toString();
     }
 }
