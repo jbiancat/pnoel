@@ -4,6 +4,7 @@ import android.app.DownloadManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -14,6 +15,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.koushikdutta.async.future.Future;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,12 +27,15 @@ import java.util.List;
 import java.util.logging.Logger;
 import android.widget.ArrayAdapter;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private List<Enfant> enfants = new ArrayList<>();
     private JSONObject jsonObject;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final MainActivity context = this;
+
         setContentView(R.layout.activity_main);
 
         List<String> tab = new ArrayList<>();
@@ -38,49 +45,36 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         Spinner listeAge = findViewById(R.id.spinner);
-        ListView liste = findViewById(R.id.liste);
+        final ListView liste = findViewById(R.id.liste);
+        Button button = findViewById(R.id.filtrer);
+
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tab);
-
         listeAge.setAdapter(dataAdapter);
-
-        RequestQueue queue = Volley.newRequestQueue(this);
         String url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&facet=prenom&facet=sexe&facet=annee_naissance";
 
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
+        Ion.with(context)
+                .load(url)
+                .asString()
+                .setCallback(new FutureCallback<String>() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onCompleted(Exception e, String result) {
                         try {
-                            jsonObject = new JSONObject(response);
+                            jsonObject = new JSONObject(result);
                             JSONArray jr = jsonObject.getJSONArray("records");
-                            for (int i=0; i<jr.length(); i++) {
+                            for (int i = 0; i < jr.length(); i++) {
                                 JSONObject o = jr.getJSONObject(i);
                                 JSONObject fields = o.getJSONObject("fields");
-                                Log.i("prout", o.toString());
-                                Enfant e = new Enfant(fields.getInt("annee_naissance"), fields.getString("prenom"), fields.getString("sexe"));
-                                enfants.add(e);
-                                Log.i("nullos",e.toString());
+                                Enfant enfant = new Enfant(fields.getInt("annee_naissance"), fields.getString("prenom"), fields.getString("sexe"));
+                                enfants.add(enfant);
+                                ArrayAdapter<Enfant> dataEnfant = new ArrayAdapter<Enfant>(context, android.R.layout.simple_list_item_1, enfants);
+                                liste.setAdapter(dataEnfant);
                             }
-                            Log.i("enfants",enfants.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.i("alluile1", enfants.toString());
+                        } catch (JSONException ex) {
+                            ex.printStackTrace();
                         }
-
-                        // Display the first 500 characters of the response string.
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("echec", "echec");
-            }
-        });
-
-        ArrayAdapter<Enfant> dataEnfant = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, enfants);
-        liste.setAdapter(dataEnfant);
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
+                });
+        }
 }
