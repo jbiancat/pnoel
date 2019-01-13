@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Spinner listeAge = findViewById(R.id.spinner);
 
-        final ArrayAdapter<Enfant> dataEnfant = new ArrayAdapter<Enfant>(this, android.R.layout.simple_list_item_1, enfants);
         ListView liste = findViewById(R.id.liste);
+        final EnfantArrayAdapter  dataEnfant = new EnfantArrayAdapter(this,R.layout.list_item_layout, R.id.text1, enfants);
         liste.setAdapter(dataEnfant);
         Button button = findViewById(R.id.filtrer);
 
