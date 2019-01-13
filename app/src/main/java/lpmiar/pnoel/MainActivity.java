@@ -9,12 +9,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -23,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 import android.widget.ArrayAdapter;
@@ -31,6 +30,7 @@ import android.widget.ArrayAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private List<Enfant> enfants = new ArrayList<>();
+
     private JSONObject jsonObject;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         Spinner listeAge = findViewById(R.id.spinner);
-        final ListView liste = findViewById(R.id.liste);
+
+        final ArrayAdapter<Enfant> dataEnfant = new ArrayAdapter<Enfant>(this, android.R.layout.simple_list_item_1, enfants);
+        ListView liste = findViewById(R.id.liste);
+        liste.setAdapter(dataEnfant);
         Button button = findViewById(R.id.filtrer);
 
 
@@ -53,27 +56,20 @@ public class MainActivity extends AppCompatActivity {
         listeAge.setAdapter(dataAdapter);
         String url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&facet=prenom&facet=sexe&facet=annee_naissance";
 
-        Ion.with(context)
+        Ion.with(this)
                 .load(url)
-                .asString()
-                .setCallback(new FutureCallback<String>() {
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
                     @Override
-                    public void onCompleted(Exception e, String result) {
-                        try {
-                            jsonObject = new JSONObject(result);
-                            JSONArray jr = jsonObject.getJSONArray("records");
-                            for (int i = 0; i < jr.length(); i++) {
-                                JSONObject o = jr.getJSONObject(i);
-                                JSONObject fields = o.getJSONObject("fields");
-                                Enfant enfant = new Enfant(fields.getInt("annee_naissance"), fields.getString("prenom"), fields.getString("sexe"));
-                                enfants.add(enfant);
-                                ArrayAdapter<Enfant> dataEnfant = new ArrayAdapter<Enfant>(context, android.R.layout.simple_list_item_1, enfants);
-                                liste.setAdapter(dataEnfant);
+                    public void onCompleted(Exception e, JsonObject result) {
+
+                        JsonArray jArray = result.get("records").getAsJsonArray();
+                        Iterator<JsonElement> ite = jArray.iterator();
+                            while (ite.hasNext()) {
+                                JsonObject fields = ite.next().getAsJsonObject().get("fields").getAsJsonObject();
+                                Enfant enfant = new Enfant(fields.get("annee_naissance").getAsInt(), fields.get("prenom").getAsString(), fields.get("sexe").getAsString());
+                                dataEnfant.add(enfant);
                             }
-                            Log.i("alluile1", enfants.toString());
-                        } catch (JSONException ex) {
-                            ex.printStackTrace();
-                        }
                     }
                 });
         }

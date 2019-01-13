@@ -7,6 +7,9 @@ public class Enfant {
     private int anneeNaissance;
     private String prenom;
     private String sexe;
+    private boolean lettreRecu;
+    private boolean sage;
+    private boolean cadeauLivre;
 
     public Enfant(int aN, String p, String s){
         int now = Calendar.getInstance().get(Calendar.YEAR);
@@ -14,6 +17,9 @@ public class Enfant {
         this.age = now - this.anneeNaissance;
         this.prenom = p;
         this.sexe = s;
+        this.sage = true;
+        this.lettreRecu = false;
+        this.cadeauLivre = false;
     }
 
     public int getAge() { return age; }
@@ -44,6 +50,30 @@ public class Enfant {
 
     public void setSexe(String sexe) {
         this.sexe = sexe;
+    }
+
+    public boolean isLettreRecu() {
+        return lettreRecu;
+    }
+
+    public void setLettreRecu(boolean lettreRecu) {
+        this.lettreRecu = lettreRecu;
+    }
+
+    public boolean isSage() {
+        return sage;
+    }
+
+    public void setSage(boolean sage) {
+        this.sage = sage;
+    }
+
+    public boolean isCadeauLivre() {
+        return cadeauLivre;
+    }
+
+    public void setCadeauLivre(boolean cadeauLivre) {
+        this.cadeauLivre = cadeauLivre;
     }
 
     @Override
