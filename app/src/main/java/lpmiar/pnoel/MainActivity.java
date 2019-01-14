@@ -50,14 +50,8 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         Spinner listeAge = findViewById(R.id.spinner);
-<<<<<<< HEAD
-
-        ListView liste = findViewById(R.id.liste);
-        final EnfantArrayAdapter  dataEnfant = new EnfantArrayAdapter(this, R.layout.list_item_layout);
-=======
         final ListView liste = findViewById(R.id.liste);
-        final EnfantArrayAdapter  dataEnfant = new EnfantArrayAdapter(this,R.layout.list_item_layout, R.id.text1, enfants);
->>>>>>> 63ff5556d28df6b65f4682e77b8cd3325cfcfa6d
+        final EnfantArrayAdapter  dataEnfant = new EnfantArrayAdapter(this, R.layout.list_item_layout);
         liste.setAdapter(dataEnfant);
         Button button = findViewById(R.id.filtrer);
         button.setOnClickListener( new View.OnClickListener() {
