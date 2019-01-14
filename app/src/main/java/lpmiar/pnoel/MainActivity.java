@@ -1,13 +1,11 @@
 package lpmiar.pnoel;
 
-import android.app.DownloadManager;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -15,28 +13,22 @@ import android.widget.Spinner;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private List<Enfant> enfants = new ArrayList<>();
 
-    private JSONObject jsonObject;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -88,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         }
+
+
         public void filtre(String sexe, String annee_naissance, ListView liste){
             String url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&facet=prenom&facet=sexe&facet=annee_naissance";
 
@@ -97,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             if (! annee_naissance.equals("ddn")){
                 url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&facet=prenom&facet=sexe&facet=annee_naissance";
             }
-            final EnfantArrayAdapter  dataEnfant = new EnfantArrayAdapter(this,R.layout.list_item_layout, R.id.text1, enfants);
+            final EnfantArrayAdapter  dataEnfant = new EnfantArrayAdapter(this,R.layout.list_item_layout);
             dataEnfant.clear();
             Ion.with(this)
                     .load(url)
