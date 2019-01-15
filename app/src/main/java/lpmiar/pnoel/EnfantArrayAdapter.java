@@ -44,15 +44,15 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
             String imageKdoURL = "https://www.memo-cadeaux.com/images/picto/picto-offrir.png";
             Picasso.get()
                     .load(imageSageURL)
-                    .resize(200,200)
+                    .resize(150,150)
                     .into(imgSage);
             Picasso.get()
                     .load(imageLettreURL)
-                    .resize(200,200)
+                    .resize(150,150)
                     .into(imgLettre);
             Picasso.get()
                     .load(imageKdoURL)
-                    .resize(200,200)
+                    .resize(150,150)
                     .into(imgKdo);
         }
 

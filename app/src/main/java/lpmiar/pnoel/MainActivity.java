@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private List<Enfant> enfants = new ArrayList<>();
+    private List<Enfant> enfantsFiltre = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +54,13 @@ public class MainActivity extends AppCompatActivity {
                 RadioButton rb = (RadioButton)findViewById(selectedId);
                 String date_de_naissance = ddn.getSelectedItem().toString();
 
-                filtre(rb.getText().toString(), date_de_naissance, liste);
+                filtre(rb.getText().toString(), date_de_naissance, liste, dataEnfant);
             }
         });
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tab);
         listeAge.setAdapter(dataAdapter);
-        String url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&facet=prenom&facet=sexe&facet=annee_naissance";
+        String url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&rows=1000&facet=prenom&facet=sexe&facet=annee_naissance";
 
         Ion.with(this)
                 .load(url)
@@ -73,42 +74,42 @@ public class MainActivity extends AppCompatActivity {
                             while (ite.hasNext()) {
                                 JsonObject fields = ite.next().getAsJsonObject().get("fields").getAsJsonObject();
                                 Enfant enfant = new Enfant(fields.get("annee_naissance").getAsInt(), fields.get("prenom").getAsString(), fields.get("sexe").getAsString());
+                                enfants.add(enfant);
                                 dataEnfant.add(enfant);
                                 Log.i("enfant:", enfant.toString());
 
                             }
                     }
                 });
+    }
+
+
+        public void filtre(String sexe, String annee_naissance, ListView liste, EnfantArrayAdapter enfantsAdapter){
+
+            //Recuperation de la liste d'enfant depuis l'ArrayAdapter et filtrer sur le sexe et l'annee de naissance
+            enfantsFiltre.clear();
+            if(sexe.contains("ç")) sexe = sexe.replace("ç","c");
+            for (Enfant e : enfants) {
+                if (e.getSexe().equals(sexe.toUpperCase()) && String.valueOf(e.getAnneeNaissance()).equals(annee_naissance)){
+                    enfantsFiltre.add(e);
+                }
+            }
+
+
+            if (sexe.equals("Tous")){
+                clearFiltre(liste, enfantsAdapter);
+            } else {
+                enfantsAdapter.clear();
+                enfantsAdapter.addAll(enfantsFiltre);
+                liste.setAdapter(enfantsAdapter);
+            }
+
         }
 
+        public void clearFiltre(ListView liste, EnfantArrayAdapter enfantsAdapter){
+            enfantsAdapter.clear();
+            enfantsAdapter.addAll(enfants);
+            liste.setAdapter(enfantsAdapter);
 
-        public void filtre(String sexe, String annee_naissance, ListView liste){
-            String url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&facet=prenom&facet=sexe&facet=annee_naissance";
-
-            if (! sexe.equals("Tous")){
-                url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&facet=prenom&facet=sexe&facet=annee_naissance";
-            }
-            if (! annee_naissance.equals("ddn")){
-                url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&facet=prenom&facet=sexe&facet=annee_naissance";
-            }
-            final EnfantArrayAdapter  dataEnfant = new EnfantArrayAdapter(this,R.layout.list_item_layout);
-            dataEnfant.clear();
-            Ion.with(this)
-                    .load(url)
-                    .asJsonObject()
-                    .setCallback(new FutureCallback<JsonObject>() {
-                        @Override
-                        public void onCompleted(Exception e, JsonObject result) {
-
-                            JsonArray jArray = result.get("records").getAsJsonArray();
-                            Iterator<JsonElement> ite = jArray.iterator();
-                            while (ite.hasNext()) {
-                                JsonObject fields = ite.next().getAsJsonObject().get("fields").getAsJsonObject();
-                                Enfant enfant = new Enfant(fields.get("annee_naissance").getAsInt(), fields.get("prenom").getAsString(), fields.get("sexe").getAsString());
-                                dataEnfant.add(enfant);
-                            }
-                        }
-                    });
-            liste.setAdapter(dataEnfant);
         }
 }
