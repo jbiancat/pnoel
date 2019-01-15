@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">PNoel</string>
+    <string name="tous">Tous</string>
+    <string name="fille">Fille</string>
+    <string name="gar_on">Garçon</string>
+    <string name="filtrer">Filtrer</string>
+    <string name="reset">Reset</string>
 </resources>
