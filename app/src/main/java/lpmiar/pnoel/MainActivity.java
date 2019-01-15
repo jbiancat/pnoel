@@ -84,50 +84,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-        public void filtre(String sexe, String annee_naissance, ListView liste, EnfantArrayAdapter enfantsAdapter) {
-
-            //Recuperation de la liste d'enfant depuis l'ArrayAdapter et filtrer sur le sexe et l'annee de naissance
+        private void filtre(String sexe, String annee_naissance, ListView liste, EnfantArrayAdapter enfantsAdapter) {
+            boolean filtreCleared = false;
             enfantsFiltre.clear();
             if (sexe.contains("ç")) sexe = sexe.replace("ç", "c");
 
-
-            if (sexe.equals("Tous") && !annee_naissance.equals("ddn")) {
-                //si tous les sexes et une date de naissance précise
-                for (Enfant e : enfants) {
-                    if (String.valueOf(e.getAnneeNaissance()).equals(annee_naissance)) {
-                        enfantsFiltre.add(e);
+            if(sexe.equals("Tous")){
+                if(!annee_naissance.equals("ddn")){
+                    //si tous les sexes et une date de naissance précise
+                    for (Enfant e : enfants) {
+                        if (String.valueOf(e.getAnneeNaissance()).equals(annee_naissance)) {
+                            enfantsFiltre.add(e);
+                        }
                     }
-                }
-            } else if(!sexe.equals("Tous") && annee_naissance.equals("ddn")){
-                //si un sexe précis et pas de date de naissance
-                for (Enfant e : enfants) {
-                    if (e.getSexe().equals(sexe.toUpperCase())) {
-                        enfantsFiltre.add(e);
-                    }
+                } else {
+                    filtreCleared = clearFiltre(liste, enfantsAdapter);
                 }
             } else {
-                //si un sexe précis et une date de naissance précise
-                for (Enfant e : enfants) {
-                    if (e.getSexe().equals(sexe.toUpperCase()) && String.valueOf(e.getAnneeNaissance()).equals(annee_naissance)) {
-                        enfantsFiltre.add(e);
+                if(annee_naissance.equals("ddn")){
+                    //si un sexe précis et pas de date de naissance
+                    for (Enfant e : enfants) {
+                        if (e.getSexe().equals(sexe.toUpperCase())) {
+                            enfantsFiltre.add(e);
+                        }
+                    }
+                } else {
+                    //si un sexe précis et une date de naissance précise
+                    for (Enfant e : enfants) {
+                        if (e.getSexe().equals(sexe.toUpperCase()) && String.valueOf(e.getAnneeNaissance()).equals(annee_naissance)) {
+                            enfantsFiltre.add(e);
+                        }
                     }
                 }
             }
 
-            //si aucun des deux, on reset le filtre, si on set le filtre
-            if (sexe.equals("Tous") && annee_naissance.equals("ddn")) {
-                clearFiltre(liste, enfantsAdapter);
-            } else {
+            //si le filtre n'a pas été reset, on set la liste filtrée
+            if (!filtreCleared) {
                 enfantsAdapter.clear();
                 enfantsAdapter.addAll(enfantsFiltre);
                 liste.setAdapter(enfantsAdapter);
             }
         }
 
-        public void clearFiltre(ListView liste, EnfantArrayAdapter enfantsAdapter){
+        private boolean clearFiltre(ListView liste, EnfantArrayAdapter enfantsAdapter){
             enfantsAdapter.clear();
             enfantsAdapter.addAll(enfants);
             liste.setAdapter(enfantsAdapter);
-
+            return true;
         }
 }
