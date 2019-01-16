@@ -33,25 +33,31 @@
         android:orientation="horizontal"
         android:layout_alignParentRight="true">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/img_sage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:focusable="true"
+            android:background="@null"
             android:layout_marginRight="10dp"/>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/img_lettre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:focusable="true"
+            android:background="@null"
             android:layout_marginRight="10dp"/>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/img_kdo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:focusable="true"
+            android:background="@null"
             android:layout_marginRight="10dp"/>
     </LinearLayout>
 

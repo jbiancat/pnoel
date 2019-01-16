@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -27,7 +27,7 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
 
         if (view == null) view = this.li.inflate(this.myItemLayout, null);
 
-        Enfant e = this.getItem(position);
+        final Enfant e = this.getItem(position);
         if (e != null){
             TextView textPrenom = (TextView) view.findViewById(R.id.text_prenom);
             textPrenom.setText(e.getPrenom());
@@ -35,27 +35,81 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
             TextView textAge = (TextView) view.findViewById(R.id.text_age);
             textAge.setText(String.valueOf(e.getAge())+" ans");
 
-            ImageView imgSage = (ImageView) view.findViewById(R.id.img_sage);
-            ImageView imgLettre = (ImageView) view.findViewById(R.id.img_lettre);
-            ImageView imgKdo = (ImageView) view.findViewById(R.id.img_kdo);
+            final ImageButton imgSage = (ImageButton) view.findViewById(R.id.img_sage);
+            final ImageButton imgLettre = (ImageButton) view.findViewById(R.id.img_lettre);
+            final ImageButton imgKdo = (ImageButton) view.findViewById(R.id.img_kdo);
 
-            String imageSageURL = "https://cdn3.iconfinder.com/data/icons/lightly-icons/30/happy-480.png";
-            String imageLettreURL = "https://www.julielessard.com/lettre.png";
-            String imageKdoURL = "https://www.memo-cadeaux.com/images/picto/picto-offrir.png";
-            Picasso.get()
-                    .load(imageSageURL)
-                    .resize(150,150)
-                    .into(imgSage);
-            Picasso.get()
-                    .load(imageLettreURL)
-                    .resize(150,150)
-                    .into(imgLettre);
-            Picasso.get()
-                    .load(imageKdoURL)
-                    .resize(150,150)
-                    .into(imgKdo);
+            //on set les onClick
+            imgSage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    e.setSage(!e.isSage());
+                    if (e.isSage()){
+                        loadImage(Enfant.URL_IMG_SAGE, imgSage);
+                    } else {
+                        loadImage(Enfant.URL_IMG_PAS_SAGE, imgSage);
+                    }
+                }
+            });
+            imgLettre.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    e.setLettreRecu(!e.isLettreRecu());
+                    if (e.isLettreRecu()){
+                        loadImage(Enfant.URL_IMG_LETTRE_RECU, imgLettre);
+                    } else {
+                        loadImage(Enfant.URL_IMG_LETTRE_nRECU, imgLettre);
+                    }
+                }
+            });
+            imgKdo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    e.setCadeauLivre(!e.isCadeauLivre());
+                    if (e.isCadeauLivre()){
+                        loadImage(Enfant.URL_IMG_KDO_LIVRE, imgKdo);
+                    } else {
+                        loadImage(Enfant.URL_IMG_KDO_nLIVRE, imgKdo);
+                    }
+                }
+            });
+
+
+            //je charge tous les pictos au moins une fois avant de les afficher
+            loadImage(Enfant.URL_IMG_SAGE, imgSage);
+            loadImage(Enfant.URL_IMG_PAS_SAGE, imgSage);
+            loadImage(Enfant.URL_IMG_LETTRE_RECU, imgLettre);
+            loadImage(Enfant.URL_IMG_LETTRE_nRECU, imgLettre);
+            loadImage(Enfant.URL_IMG_KDO_LIVRE, imgKdo);
+            loadImage(Enfant.URL_IMG_KDO_nLIVRE, imgKdo);
+
+            //on charge les images
+            if (e.isSage()){
+                loadImage(Enfant.URL_IMG_SAGE, imgSage);
+            } else {
+                loadImage(Enfant.URL_IMG_PAS_SAGE, imgSage);
+            }
+
+            if (e.isLettreRecu()){
+                loadImage(Enfant.URL_IMG_LETTRE_RECU, imgLettre);
+            } else {
+                loadImage(Enfant.URL_IMG_LETTRE_nRECU, imgLettre);
+            }
+
+            if (e.isCadeauLivre()){
+                loadImage(Enfant.URL_IMG_KDO_LIVRE, imgKdo);
+            } else {
+                loadImage(Enfant.URL_IMG_KDO_nLIVRE, imgKdo);
+            }
         }
 
         return view;
+    }
+
+    private void loadImage(String URL, ImageButton button){
+        Picasso.get()
+                .load(URL)
+                .resize(150,150)
+                .into(button);
     }
 }

@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="350px"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <RadioGroup
         android:id="@+id/radioGroup"
@@ -31,39 +32,134 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/gar_on" />
+            android:text="@string/garcon" />
     </RadioGroup>
 
-    <Button
-        android:id="@+id/filtrerBtn"
-        android:layout_width="96dp"
-        android:layout_height="39dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/filtrer" />
-
-    <Button
-        android:id="@+id/resetBtn"
-        android:layout_width="96dp"
-        android:layout_height="39dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="9dp"
-        android:text="@string/reset" />
 
     <Spinner
         android:id="@+id/spinnerAge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="8dp"
+        android:layout_below="@+id/radioGroup"/>
+
+
+    <RadioGroup
+        android:id="@+id/rgSage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkedButton="@id/rbSageAll"
+        android:orientation="horizontal"
+        android:layout_below="@+id/spinnerAge">
+
+        <RadioButton
+            android:id="@+id/rbSageAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/tous" />
+
+        <RadioButton
+            android:id="@+id/rbSage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sage" />
+
+        <RadioButton
+            android:id="@+id/rbPasSage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/pas_sage" />
+    </RadioGroup>
+
+
+
+    <RadioGroup
+        android:id="@+id/rgLettre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkedButton="@id/rbLettreAll"
+        android:orientation="horizontal"
+        android:layout_below="@+id/rgSage">
+
+        <RadioButton
+            android:id="@+id/rbLettreAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/tous" />
+
+        <RadioButton
+            android:id="@+id/rbLettreRecu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/recu" />
+
+        <RadioButton
+            android:id="@+id/rbNRecu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/non_recu" />
+    </RadioGroup>
+
+
+
+    <RadioGroup
+        android:id="@+id/rgKdo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkedButton="@id/rbKdoAll"
+        android:orientation="horizontal"
+        android:layout_below="@+id/rgLettre">
+
+        <RadioButton
+            android:id="@+id/rbKdoAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/tous" />
+
+        <RadioButton
+            android:id="@+id/rbKdoLivre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cadeaux_livres" />
+
+        <RadioButton
+            android:id="@+id/rbKdoNLivre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cadeaux_non_livres" />
+    </RadioGroup>
+
+
+    <Button
+        android:id="@+id/filtrerBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rgKdo"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/filtrer" />
+
+    <Button
+        android:id="@+id/resetBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/reset"
+        android:layout_below="@+id/rgKdo"/>
 
     <ImageButton
         android:id="@+id/imageButton"
@@ -73,7 +169,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="1dp"
-        app:srcCompat="@android:drawable/ic_delete" />
+        app:srcCompat="@android:drawable/ic_delete"
+        android:background="@null"/>
 
 
 </RelativeLayout>

@@ -2,7 +2,13 @@
     <string name="app_name">PNoel</string>
     <string name="tous">Tous</string>
     <string name="fille">Fille</string>
-    <string name="gar_on">Garçon</string>
+    <string name="garcon">Garçon</string>
     <string name="filtrer">Filtrer</string>
     <string name="reset">Reset</string>
+    <string name="sage">Sage</string>
+    <string name="pas_sage">Pas sage</string>
+    <string name="recu">Reçu</string>
+    <string name="non_recu">Non reçu</string>
+    <string name="cadeaux_non_livres">Non livrés</string>
+    <string name="cadeaux_livres">Livrés</string>
 </resources>
