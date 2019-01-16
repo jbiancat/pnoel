@@ -75,7 +75,7 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
             loadImage(Enfant.URL_IMG_KDO_LIVRE, imgKdo);
             loadImage(Enfant.URL_IMG_KDO_nLIVRE, imgKdo);
 
-            //on charge les images
+            //on charge les images en fonction des enfants
             loadSageImg(imgSage,textSage,e);
             loadLettreImg(imgLettre, textLettre, e);
             loadKdoImg(imgKdo, textKdo, e);
@@ -84,6 +84,7 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
         return view;
     }
 
+    //methode pour charger les images  sur un ImageButton avec Picasso
     private void loadImage(String URL, ImageButton button){
         Picasso.get()
                 .load(URL)
@@ -91,6 +92,7 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
                 .into(button);
     }
 
+    //methode pour charger les images sage/pas sage en fonction d'un enfant
     private void loadSageImg(ImageButton button, TextView textImg, Enfant e){
         if (e.isSage()){
             loadImage(Enfant.URL_IMG_SAGE, button);
@@ -101,6 +103,7 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
         }
     }
 
+    //methode pour charger les images recu/pas recu en fonction d'un enfant
     private void loadLettreImg(ImageButton button, TextView textImg, Enfant e){
         if (e.isLettreRecu()){
             loadImage(Enfant.URL_IMG_LETTRE_RECU, button);
@@ -111,6 +114,7 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
         }
     }
 
+    //methode pour charger les images livre/pas livre en fonction d'un enfant
     private void loadKdoImg(ImageButton button, TextView textImg, Enfant e){
         if (e.isCadeauLivre()){
             loadImage(Enfant.URL_IMG_KDO_LIVRE, button);
@@ -120,5 +124,4 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
             textImg.setText(Enfant.TEXT_KDO_nLIVRE);
         }
     }
-
 }

@@ -11,6 +11,7 @@ public class Enfant {
     public final static String URL_IMG_KDO_LIVRE = "https://www.memo-cadeaux.com/images/picto/picto-offrir.png";
     public final static String URL_IMG_KDO_nLIVRE = "https://png2.kisspng.com/sh/ef776cdb640f63b47660fb35ce820c48/L0KzQYm3VMI4N6lnfZH0aYP2gLBuTfNwdaF6jNd7LXnmf7B6TfJwgF46edc8ZEnnRYKCVPM5QF88TqoCNEmzQ4K8UsQ5QGI9T6k6MEO5PsH1h5==/kisspng-computer-icons-box-5ae3d9d5194c88.7687490315248818771036.png";
 
+    //Texte pour gerer les filtres
     public final static String TEXT_SAGE = "Sage";
     public final static String TEXT_PAS_SAGE = "Pas sage";
     public final static String TEXT_LETTRE_RECU = "Reçue";

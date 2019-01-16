@@ -30,16 +30,16 @@ public class MainActivity extends AppCompatActivity {
 
     public final static String DEFAUT_VALUE = "Tous";
 
-
+    //definition de List d'annees de naissance
     public final static String DEFAUT_DDN = "Année de naissance";
     private final List<String> annees = new ArrayList<String>(){{
         add(DEFAUT_DDN);
-        for (Integer i = 2005; i <2018;  i ++){
+        for (Integer i = 2005; i < 2019;  i ++){
             add(i.toString());
         }
     }};
 
-    //definition du tableau d'alphabet
+    //definition de List d'alphabet
     public final static String DEFAUT_INITIALE = "Initiale";
     public final static char[] ALPHABET = "abcdefghijklmnopqrstuvwxyz".toCharArray();
     private final List<String> alphaArray = new ArrayList<String>(){{
@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }};
 
+    //Lists pour les filtres
     private final List<Enfant> enfants = new ArrayList<>();
     private final List<Enfant> enfantsFiltre = new ArrayList<>();
     private final List<Enfant> enfantsFiltreSage = new ArrayList<>();
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private final List<Enfant> enfantsFiltreInitiale = new ArrayList<>();
 
 
+    //Valeurs pour init les filtres a l'ouverture de la popin
     private Integer lastFiltreSexe = null;
     private String lastFiltreDDN = null;
     private Integer lastFiltreSage = null;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private Integer lastFiltreKdo = null;
     private String lastFiltreInitiale = null;
 
+    //URL pour l'API
     private static final String URL = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=annee_naissance+%3E%3D+2005&rows=1000&facet=prenom&facet=sexe&facet=annee_naissance";
 
     @Override
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
+
 
         final ListView liste = findViewById(R.id.liste);
         final EnfantArrayAdapter  dataEnfant = new EnfantArrayAdapter(this, R.layout.list_item_layout);
@@ -97,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+        //bouton pour la popup filtre
         FloatingActionButton action = (FloatingActionButton) findViewById(R.id.filtrerFloatingBtn);
-
         action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,138 +112,140 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-        private void filtre(String sexe, String annee_naissance, String sage, String lettre, String kdo, String initiale, ListView liste, EnfantArrayAdapter enfantsAdapter) {
+    //methode pour filtrer la liste d'enfant
+    private void filtre(String sexe, String annee_naissance, String sage, String lettre, String kdo, String initiale, ListView liste, EnfantArrayAdapter enfantsAdapter) {
 
-            enfantsFiltreSage.clear();
-            enfantsFiltreLettre.clear();
-            enfantsFiltreKdo.clear();
-            enfantsFiltreInitiale.clear();
-            enfantsFiltre.clear();
-            if (sexe.contains("ç")) sexe = sexe.replace("ç", "c");
+        enfantsFiltreSage.clear();
+        enfantsFiltreLettre.clear();
+        enfantsFiltreKdo.clear();
+        enfantsFiltreInitiale.clear();
+        enfantsFiltre.clear();
+        if (sexe.contains("ç")) sexe = sexe.replace("ç", "c");
 
             //Filtre sur sexe et annee de naissance
-            if(sexe.equals(DEFAUT_VALUE)){
-                if(!annee_naissance.equals(DEFAUT_DDN)){
-                    //si tous les sexes et une date de naissance précise
-                    for (Enfant e : enfants) {
-                        if (String.valueOf(e.getAnneeNaissance()).equals(annee_naissance)) {
-                            enfantsFiltre.add(e);
-                        }
-                    }
-                } else {
-                    for (Enfant e : enfants) {
+        if(sexe.equals(DEFAUT_VALUE)){
+            if(!annee_naissance.equals(DEFAUT_DDN)){
+                //si tous les sexes et une date de naissance précise
+                for (Enfant e : enfants) {
+                    if (String.valueOf(e.getAnneeNaissance()).equals(annee_naissance)) {
                         enfantsFiltre.add(e);
                     }
                 }
             } else {
-                if(annee_naissance.equals(DEFAUT_DDN)){
-                    //si un sexe précis et pas de date de naissance
-                    for (Enfant e : enfants) {
-                        if (e.getSexe().equals(sexe.toUpperCase())) {
-                            enfantsFiltre.add(e);
-                        }
-                    }
-                } else {
-                    //si un sexe précis et une date de naissance précise
-                    for (Enfant e : enfants) {
-                        if (e.getSexe().equals(sexe.toUpperCase()) && String.valueOf(e.getAnneeNaissance()).equals(annee_naissance)) {
-                            enfantsFiltre.add(e);
-                        }
-                    }
-                }
-            }
-
-            //si un de ces strings est differents de "Tous", on applique le filtre sur Sage, Lettre et Cadeau
-            if (!sage.equals(DEFAUT_VALUE) || !lettre.equals(DEFAUT_VALUE) || !kdo.equals(DEFAUT_VALUE) || !initiale.equals(DEFAUT_INITIALE)){
-
-                //filtre sur la premiere lettre
-                if (!initiale.equals(DEFAUT_INITIALE)){
-                    for (Enfant e : enfantsFiltre){
-                        if (e.getInitiale().equals(initiale)) enfantsFiltreInitiale.add(e);
-                    }
-                } else {
-                    for (Enfant e : enfantsFiltre){
-                        enfantsFiltreInitiale.add(e);
-                    }
-                }
-
-                //filtre Sage
-                if (sage.equals(Enfant.TEXT_SAGE)){
-                    for (Enfant e : enfantsFiltreInitiale) {
-                        if (e.isSage()) enfantsFiltreSage.add(e);
-                    }
-                } else if (sage.equals(Enfant.TEXT_PAS_SAGE)){
-                    for (Enfant e : enfantsFiltreInitiale) {
-                        if (!e.isSage()) enfantsFiltreSage.add(e);
-                    }
-                } else {
-                    for(Enfant e : enfantsFiltreInitiale){
-                        enfantsFiltreSage.add(e);
-                    }
-                }
-
-                //filtre Lettre
-                if (lettre.equals(Enfant.TEXT_LETTRE_RECU)){
-                    for(Enfant e : enfantsFiltreSage){
-                        if (e.isLettreRecu()) enfantsFiltreLettre.add(e);
-                    }
-                } else if (lettre.equals(Enfant.TEXT_LETTRE_nRECU)){
-                    for(Enfant e : enfantsFiltreSage){
-                        if (!e.isLettreRecu()) enfantsFiltreLettre.add(e);
-                    }
-                } else {
-                    for (Enfant e : enfantsFiltreSage){
-                        enfantsFiltreLettre.add(e);
-                    }
-                }
-
-                //filtre kdo
-                if (kdo.equals(Enfant.TEXT_KDO_LIVRE)){
-                    for (Enfant e : enfantsFiltreLettre){
-                        if (e.isCadeauLivre()) enfantsFiltreKdo.add(e);
-                    }
-                } else if (kdo.equals(Enfant.TEXT_KDO_nLIVRE)){
-                    for (Enfant e : enfantsFiltreLettre){
-                        if (!e.isCadeauLivre()) enfantsFiltreKdo.add(e);
-                    }
-                } else {
-                    for (Enfant e : enfantsFiltreLettre){
-                        enfantsFiltreKdo.add(e);
-                    }
-                }
-
-                //On rafraichi la liste d'enfants filtré avec les trois derniers filtres
-                enfantsFiltre.clear();
-                for (Enfant e : enfantsFiltreKdo){
+                for (Enfant e : enfants) {
                     enfantsFiltre.add(e);
                 }
             }
-
-            
-            enfantsAdapter.clear();
-            enfantsAdapter.addAll(enfantsFiltre);
-            liste.setAdapter(enfantsAdapter);
+        } else {
+            if(annee_naissance.equals(DEFAUT_DDN)){
+                //si un sexe précis et pas de date de naissance
+                for (Enfant e : enfants) {
+                    if (e.getSexe().equals(sexe.toUpperCase())) {
+                        enfantsFiltre.add(e);
+                    }
+                }
+            } else {
+                //si un sexe précis et une date de naissance précise
+                for (Enfant e : enfants) {
+                    if (e.getSexe().equals(sexe.toUpperCase()) && String.valueOf(e.getAnneeNaissance()).equals(annee_naissance)) {
+                        enfantsFiltre.add(e);
+                    }
+                }
+            }
         }
 
-        private boolean clearFiltre(ListView liste, EnfantArrayAdapter enfantsAdapter){
-            enfantsFiltreSage.clear();
-            enfantsFiltreLettre.clear();
-            enfantsFiltreKdo.clear();
-            enfantsFiltreInitiale.clear();
+        //si un de ces strings est differents de "Tous" ou des valeurs par def, on applique le filtre sur Sage, Lettre, et Initiale
+        if (!sage.equals(DEFAUT_VALUE) || !lettre.equals(DEFAUT_VALUE) || !kdo.equals(DEFAUT_VALUE) || !initiale.equals(DEFAUT_INITIALE)){
+            //filtre sur la premiere lettre
+            if (!initiale.equals(DEFAUT_INITIALE)){
+                for (Enfant e : enfantsFiltre){
+                    if (e.getInitiale().equals(initiale)) enfantsFiltreInitiale.add(e);
+                }
+            } else {
+                for (Enfant e : enfantsFiltre){
+                    enfantsFiltreInitiale.add(e);
+                }
+            }
+            //filtre Sage
+            if (sage.equals(Enfant.TEXT_SAGE)){
+                for (Enfant e : enfantsFiltreInitiale) {
+                    if (e.isSage()) enfantsFiltreSage.add(e);
+                }
+            } else if (sage.equals(Enfant.TEXT_PAS_SAGE)){
+                for (Enfant e : enfantsFiltreInitiale) {
+                    if (!e.isSage()) enfantsFiltreSage.add(e);
+                }
+            } else {
+                for(Enfant e : enfantsFiltreInitiale){
+                    enfantsFiltreSage.add(e);
+                }
+            }
+
+            //filtre Lettre
+            if (lettre.equals(Enfant.TEXT_LETTRE_RECU)){
+                for(Enfant e : enfantsFiltreSage){
+                    if (e.isLettreRecu()) enfantsFiltreLettre.add(e);
+                }
+            } else if (lettre.equals(Enfant.TEXT_LETTRE_nRECU)){
+                for(Enfant e : enfantsFiltreSage){
+                    if (!e.isLettreRecu()) enfantsFiltreLettre.add(e);
+                }
+            } else {
+                for (Enfant e : enfantsFiltreSage){
+                    enfantsFiltreLettre.add(e);
+                }
+            }
+
+            //filtre kdo
+            if (kdo.equals(Enfant.TEXT_KDO_LIVRE)){
+                for (Enfant e : enfantsFiltreLettre){
+                    if (e.isCadeauLivre()) enfantsFiltreKdo.add(e);
+                }
+            } else if (kdo.equals(Enfant.TEXT_KDO_nLIVRE)){
+                for (Enfant e : enfantsFiltreLettre){
+                    if (!e.isCadeauLivre()) enfantsFiltreKdo.add(e);
+                }
+            } else {
+                for (Enfant e : enfantsFiltreLettre){
+                    enfantsFiltreKdo.add(e);
+                }
+            }
+            //On rafraichi la liste d'enfants filtré avec les trois derniers filtres
             enfantsFiltre.clear();
-            
-            enfantsAdapter.clear();
-            enfantsAdapter.addAll(enfants);
-            liste.setAdapter(enfantsAdapter);
-            lastFiltreSexe = null;
-            lastFiltreDDN = null;
-            lastFiltreSage = null;
-            lastFiltreLettre = null;
-            lastFiltreKdo = null;
-            lastFiltreInitiale = null;
-            return true;
+            for (Enfant e : enfantsFiltreKdo){
+                enfantsFiltre.add(e);
+            }
         }
+            
+        enfantsAdapter.clear();
+        enfantsAdapter.addAll(enfantsFiltre);
+        liste.setAdapter(enfantsAdapter);
+    }
 
+    //reinitialise le filtre
+    private void clearFiltre(ListView liste, EnfantArrayAdapter enfantsAdapter){
+        //on vide les listes de filtrage
+        enfantsFiltreSage.clear();
+        enfantsFiltreLettre.clear();
+        enfantsFiltreKdo.clear();
+        enfantsFiltreInitiale.clear();
+        enfantsFiltre.clear();
+
+        //reinitialise la liste
+        enfantsAdapter.clear();
+        enfantsAdapter.addAll(enfants);
+        liste.setAdapter(enfantsAdapter);
+
+        //on reinitialise les valeurs des filtres
+        lastFiltreSexe = null;
+        lastFiltreDDN = null;
+        lastFiltreSage = null;
+        lastFiltreLettre = null;
+        lastFiltreKdo = null;
+        lastFiltreInitiale = null;
+    }
+
+    //Methode pour ouvrir la popup filtre
     private void callFiltreDialog(final ListView liste, final EnfantArrayAdapter dataEnfant) {
         final Dialog myDialog = new Dialog(this);
         myDialog.setContentView(R.layout.popup_filtre);
@@ -264,15 +270,14 @@ public class MainActivity extends AppCompatActivity {
         ddn.setAdapter(dataAdapter);
         initiale.setAdapter(dataAlpha);
 
+        //si il y a eu un filtre, on initialise les radiogroup et spinner sur les dernieres valeures selectionnées
         if(lastFiltreSexe != null){
             radioGroup.check(lastFiltreSexe);
         }
-
         if (lastFiltreDDN != null && !lastFiltreDDN.isEmpty()){
             Integer spinnerPosition = dataAdapter.getPosition(lastFiltreDDN);
             ddn.setSelection(spinnerPosition);
         }
-
         if (lastFiltreSage != null ){
             rgSage.check(lastFiltreSage);
         }
@@ -282,25 +287,24 @@ public class MainActivity extends AppCompatActivity {
         if (lastFiltreKdo != null){
             rgKdo.check(lastFiltreKdo);
         }
-
         if (lastFiltreInitiale != null && !lastFiltreInitiale.isEmpty()){
             Integer spinnerPosition = dataAlpha.getPosition(lastFiltreInitiale);
             initiale.setSelection(spinnerPosition);
         }
 
-
         myDialog.show();
 
+        //on set les actions lorsqu'on clic sur les boutons
         filtrerBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //id de radiobutton selectionné
+                //id de radiobutton selectionnés
                 int selectedId = radioGroup.getCheckedRadioButtonId();
                 int idSage = rgSage.getCheckedRadioButtonId();
                 int idLettre = rgLettre.getCheckedRadioButtonId();
                 int idKdo = rgKdo.getCheckedRadioButtonId();
 
-                //on recupère le button
+                //on recupère le button checked
                 RadioButton rbSexe = (RadioButton) myDialog.findViewById(selectedId);
                 RadioButton rbSage = (RadioButton) myDialog.findViewById(idSage);
                 RadioButton rbLettre = (RadioButton) myDialog.findViewById(idLettre);
@@ -327,7 +331,6 @@ public class MainActivity extends AppCompatActivity {
                 myDialog.hide();
             }
         });
-
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -342,7 +345,5 @@ public class MainActivity extends AppCompatActivity {
                 myDialog.hide();
             }
         });
-
-
     }
 }
