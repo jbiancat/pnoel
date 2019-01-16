@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private List<String> tab = new ArrayList<>();
     private Integer lastFiltreSexe = null;
     private String lastFiltreDDN = null;
-    private String lastFiltreSage = null;
-    private String lastFiltreLettre = null;
-    private String lastFiltreKdo = null;
+    private Integer lastFiltreSage = null;
+    private Integer lastFiltreLettre = null;
+    private Integer lastFiltreKdo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,12 +146,19 @@ public class MainActivity extends AppCompatActivity {
         final Dialog myDialog = new Dialog(this);
         myDialog.setContentView(R.layout.popup_filtre);
         myDialog.setCancelable(false);
+
+        //Boutons de la popin
         Button filtrerBtn = (Button) myDialog.findViewById(R.id.filtrerBtn);
         Button resetBtn = (Button) myDialog.findViewById(R.id.resetBtn);
         ImageButton closeBtn = (ImageButton) myDialog.findViewById(R.id.imageButton);
 
+
+        //RadioGroup pour filtrer
         final RadioGroup radioGroup = myDialog.findViewById(R.id.radioGroup);
         final Spinner ddn = myDialog.findViewById(R.id.spinnerAge);
+        final RadioGroup rgSage = myDialog.findViewById(R.id.rgSage);
+        final RadioGroup rgLettre = myDialog.findViewById(R.id.rgLettre);
+        final RadioGroup rgKdo = myDialog.findViewById(R.id.rgKdo);
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tab);
         ddn.setAdapter(dataAdapter);
@@ -165,20 +172,50 @@ public class MainActivity extends AppCompatActivity {
             ddn.setSelection(spinnerPosition);
         }
 
+        if (lastFiltreSage != null ){
+            rgSage.check(lastFiltreSage);
+        }
+        if (lastFiltreLettre != null){
+            rgLettre.check(lastFiltreLettre);
+        }
+        if (lastFiltreKdo != null){
+            rgKdo.check(lastFiltreKdo);
+        }
+
 
         myDialog.show();
 
         filtrerBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //id de radiobutton selectionné
                 int selectedId = radioGroup.getCheckedRadioButtonId();
-                RadioButton rb = (RadioButton) myDialog.findViewById(selectedId);
-                String date_de_naissance = ddn.getSelectedItem().toString();
+                int idSage = rgSage.getCheckedRadioButtonId();
+                int idLettre = rgLettre.getCheckedRadioButtonId();
+                int idKdo = rgKdo.getCheckedRadioButtonId();
 
+                //on recupère le button
+                RadioButton rbSexe = (RadioButton) myDialog.findViewById(selectedId);
+                RadioButton rbSage = (RadioButton) myDialog.findViewById(idSage);
+                RadioButton rbLettre = (RadioButton) myDialog.findViewById(idLettre);
+                RadioButton rbKdo = (RadioButton) myDialog.findViewById(idKdo);
+
+                //on recupère le texte du button
+                String sexeStr = rbSexe.getText().toString();
+                String date_de_naissance = ddn.getSelectedItem().toString();
+                String sageStr = rbSage.getText().toString();
+                String lettreStr = rbLettre.getText().toString();
+                String kdoStr = rbKdo.getText().toString();
+
+                //on garde en mémoire les valeurs des filtres
                 lastFiltreSexe = selectedId;
                 lastFiltreDDN = date_de_naissance;
+                lastFiltreSage = idSage;
+                lastFiltreLettre = idLettre;
+                lastFiltreKdo = idKdo;
 
-                filtre(rb.getText().toString(), date_de_naissance, liste, dataEnfant);
+                //on filtre
+                filtre(sexeStr, date_de_naissance, liste, dataEnfant);
                 myDialog.hide();
             }
         });
