@@ -91,6 +91,10 @@ public class Enfant {
         this.cadeauLivre = cadeauLivre;
     }
 
+    public String getInitiale(){
+        return String.valueOf(getPrenom().charAt(0));
+    }
+
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();

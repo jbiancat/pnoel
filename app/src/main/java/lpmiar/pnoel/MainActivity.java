@@ -28,46 +28,57 @@ import android.widget.ArrayAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<Enfant> enfants = new ArrayList<>();
-    private List<Enfant> enfantsFiltre = new ArrayList<>();
-    private List<Enfant> enfantsFiltreSage = new ArrayList<>();
-    private List<Enfant> enfantsFiltreLettre = new ArrayList<>();
-    private List<Enfant> enfantsFiltreKdo = new ArrayList<>();
+    public final static String DEFAUT_VALUE = "Tous";
 
 
+    public final static String DEFAUT_DDN = "Année de naissance";
+    private final List<String> annees = new ArrayList<String>(){{
+        add(DEFAUT_DDN);
+        for (Integer i = 2005; i <2018;  i ++){
+            add(i.toString());
+        }
+    }};
 
-    private List<String> tab = new ArrayList<>();
+    //definition du tableau d'alphabet
+    public final static String DEFAUT_INITIALE = "Initiale";
+    public final static char[] ALPHABET = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+    private final List<String> alphaArray = new ArrayList<String>(){{
+        add(DEFAUT_INITIALE);
+        for(char c : ALPHABET){
+            add(String.valueOf(Character.toUpperCase(c)));
+        }
+    }};
+
+    private final List<Enfant> enfants = new ArrayList<>();
+    private final List<Enfant> enfantsFiltre = new ArrayList<>();
+    private final List<Enfant> enfantsFiltreSage = new ArrayList<>();
+    private final List<Enfant> enfantsFiltreLettre = new ArrayList<>();
+    private final List<Enfant> enfantsFiltreKdo = new ArrayList<>();
+    private final List<Enfant> enfantsFiltreInitiale = new ArrayList<>();
+
+
     private Integer lastFiltreSexe = null;
     private String lastFiltreDDN = null;
     private Integer lastFiltreSage = null;
     private Integer lastFiltreLettre = null;
     private Integer lastFiltreKdo = null;
+    private String lastFiltreInitiale = null;
 
+    private static final String URL = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=annee_naissance+%3E%3D+2005&rows=1000&facet=prenom&facet=sexe&facet=annee_naissance";
 
-    public final static String DEFAUT_VALUE = "Tous";
-    public final static String DEFAUT_DDN = "Année de naissance";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         setContentView(R.layout.activity_main);
-
-        tab.add(DEFAUT_DDN);
-        for (Integer i = 2005; i <2018;  i ++){
-            tab.add(i.toString());
-        }
-
         super.onCreate(savedInstanceState);
 
         final ListView liste = findViewById(R.id.liste);
         final EnfantArrayAdapter  dataEnfant = new EnfantArrayAdapter(this, R.layout.list_item_layout);
         liste.setAdapter(dataEnfant);
 
-
-
-        String url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&rows=1000&facet=prenom&facet=sexe&facet=annee_naissance";
-
+        //On recupère la liste des prenom
         Ion.with(this)
-                .load(url)
+                .load(URL)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
@@ -97,11 +108,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-        private void filtre(String sexe, String annee_naissance, String sage, String lettre, String kdo, ListView liste, EnfantArrayAdapter enfantsAdapter) {
+        private void filtre(String sexe, String annee_naissance, String sage, String lettre, String kdo, String initiale, ListView liste, EnfantArrayAdapter enfantsAdapter) {
 
             enfantsFiltreSage.clear();
             enfantsFiltreLettre.clear();
             enfantsFiltreKdo.clear();
+            enfantsFiltreInitiale.clear();
             enfantsFiltre.clear();
             if (sexe.contains("ç")) sexe = sexe.replace("ç", "c");
 
@@ -138,18 +150,30 @@ public class MainActivity extends AppCompatActivity {
             }
 
             //si un de ces strings est differents de "Tous", on applique le filtre sur Sage, Lettre et Cadeau
-            if (!sage.equals(DEFAUT_VALUE) || !lettre.equals(DEFAUT_VALUE) || !kdo.equals(DEFAUT_VALUE)){
+            if (!sage.equals(DEFAUT_VALUE) || !lettre.equals(DEFAUT_VALUE) || !kdo.equals(DEFAUT_VALUE) || !initiale.equals(DEFAUT_INITIALE)){
+
+                //filtre sur la premiere lettre
+                if (!initiale.equals(DEFAUT_INITIALE)){
+                    for (Enfant e : enfantsFiltre){
+                        if (e.getInitiale().equals(initiale)) enfantsFiltreInitiale.add(e);
+                    }
+                } else {
+                    for (Enfant e : enfantsFiltre){
+                        enfantsFiltreInitiale.add(e);
+                    }
+                }
+
                 //filtre Sage
                 if (sage.equals(Enfant.TEXT_SAGE)){
-                    for (Enfant e : enfantsFiltre) {
+                    for (Enfant e : enfantsFiltreInitiale) {
                         if (e.isSage()) enfantsFiltreSage.add(e);
                     }
                 } else if (sage.equals(Enfant.TEXT_PAS_SAGE)){
-                    for (Enfant e : enfantsFiltre) {
+                    for (Enfant e : enfantsFiltreInitiale) {
                         if (!e.isSage()) enfantsFiltreSage.add(e);
                     }
                 } else {
-                    for(Enfant e : enfantsFiltre){
+                    for(Enfant e : enfantsFiltreInitiale){
                         enfantsFiltreSage.add(e);
                     }
                 }
@@ -201,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
             enfantsFiltreSage.clear();
             enfantsFiltreLettre.clear();
             enfantsFiltreKdo.clear();
+            enfantsFiltreInitiale.clear();
             enfantsFiltre.clear();
             
             enfantsAdapter.clear();
@@ -211,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
             lastFiltreSage = null;
             lastFiltreLettre = null;
             lastFiltreKdo = null;
+            lastFiltreInitiale = null;
             return true;
         }
 
@@ -231,9 +257,12 @@ public class MainActivity extends AppCompatActivity {
         final RadioGroup rgSage = myDialog.findViewById(R.id.rgSage);
         final RadioGroup rgLettre = myDialog.findViewById(R.id.rgLettre);
         final RadioGroup rgKdo = myDialog.findViewById(R.id.rgKdo);
+        final Spinner initiale = myDialog.findViewById(R.id.spinnerInitiale);
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tab);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, annees);
+        ArrayAdapter<String> dataAlpha = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, alphaArray);
         ddn.setAdapter(dataAdapter);
+        initiale.setAdapter(dataAlpha);
 
         if(lastFiltreSexe != null){
             radioGroup.check(lastFiltreSexe);
@@ -252,6 +281,11 @@ public class MainActivity extends AppCompatActivity {
         }
         if (lastFiltreKdo != null){
             rgKdo.check(lastFiltreKdo);
+        }
+
+        if (lastFiltreInitiale != null && !lastFiltreInitiale.isEmpty()){
+            Integer spinnerPosition = dataAlpha.getPosition(lastFiltreInitiale);
+            initiale.setSelection(spinnerPosition);
         }
 
 
@@ -278,6 +312,7 @@ public class MainActivity extends AppCompatActivity {
                 String sageStr = rbSage.getText().toString();
                 String lettreStr = rbLettre.getText().toString();
                 String kdoStr = rbKdo.getText().toString();
+                String initialeStr = initiale.getSelectedItem().toString();
 
                 //on garde en mémoire les valeurs des filtres
                 lastFiltreSexe = selectedId;
@@ -285,9 +320,10 @@ public class MainActivity extends AppCompatActivity {
                 lastFiltreSage = idSage;
                 lastFiltreLettre = idLettre;
                 lastFiltreKdo = idKdo;
+                lastFiltreInitiale = initialeStr;
 
                 //on filtre
-                filtre(sexeStr, date_de_naissance, sageStr, lettreStr, kdoStr, liste, dataEnfant);
+                filtre(sexeStr, date_de_naissance, sageStr, lettreStr, kdoStr, initialeStr, liste, dataEnfant);
                 myDialog.hide();
             }
         });

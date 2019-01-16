@@ -157,12 +157,20 @@
             android:text="@string/cadeaux_non_livres" />
     </RadioGroup>
 
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerInitiale"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_below="@id/rgKdo"/>
+
 
     <Button
         android:id="@+id/filtrerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rgKdo"
+        android:layout_below="@+id/spinnerInitiale"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
@@ -177,7 +185,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/reset"
-        android:layout_below="@+id/rgKdo"/>
+        android:layout_below="@+id/spinnerInitiale"/>
 
     <ImageButton
         android:id="@+id/imageButton"
