@@ -33,32 +33,75 @@
         android:orientation="horizontal"
         android:layout_alignParentRight="true">
 
-        <ImageButton
-            android:id="@+id/img_sage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@null"
-            android:layout_marginRight="10dp"/>
 
-        <ImageButton
-            android:id="@+id/img_lettre"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@null"
-            android:layout_marginRight="10dp"/>
+            android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/img_kdo"
+            <ImageButton
+                android:id="@+id/img_sage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@null"
+                android:layout_marginRight="10dp"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/textSageImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10dp"
+                android:layout_below="@+id/img_sage"
+                android:layout_centerHorizontal="true"/>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/img_lettre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@null"
+                android:layout_marginRight="10dp"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/textLettreImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10dp"
+                android:layout_below="@id/img_lettre"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@null"
-            android:layout_marginRight="10dp"/>
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/img_kdo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@null"
+                android:layout_marginRight="10dp"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/textKdoImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10dp"
+                android:layout_below="@id/img_kdo"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
+
     </LinearLayout>
 
 

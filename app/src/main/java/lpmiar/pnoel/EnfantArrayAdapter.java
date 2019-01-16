@@ -39,38 +39,30 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
             final ImageButton imgLettre = (ImageButton) view.findViewById(R.id.img_lettre);
             final ImageButton imgKdo = (ImageButton) view.findViewById(R.id.img_kdo);
 
+            final TextView textSage = (TextView) view.findViewById(R.id.textSageImg);
+            final TextView textLettre = (TextView) view.findViewById(R.id.textLettreImg);
+            final TextView textKdo = (TextView) view.findViewById(R.id.textKdoImg);
+
             //on set les onClick
             imgSage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     e.setSage(!e.isSage());
-                    if (e.isSage()){
-                        loadImage(Enfant.URL_IMG_SAGE, imgSage);
-                    } else {
-                        loadImage(Enfant.URL_IMG_PAS_SAGE, imgSage);
-                    }
+                    loadSageImg(imgSage,textSage,e);
                 }
             });
             imgLettre.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     e.setLettreRecu(!e.isLettreRecu());
-                    if (e.isLettreRecu()){
-                        loadImage(Enfant.URL_IMG_LETTRE_RECU, imgLettre);
-                    } else {
-                        loadImage(Enfant.URL_IMG_LETTRE_nRECU, imgLettre);
-                    }
+                    loadLettreImg(imgLettre, textLettre, e);
                 }
             });
             imgKdo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     e.setCadeauLivre(!e.isCadeauLivre());
-                    if (e.isCadeauLivre()){
-                        loadImage(Enfant.URL_IMG_KDO_LIVRE, imgKdo);
-                    } else {
-                        loadImage(Enfant.URL_IMG_KDO_nLIVRE, imgKdo);
-                    }
+                    loadKdoImg(imgKdo, textKdo, e);
                 }
             });
 
@@ -84,23 +76,9 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
             loadImage(Enfant.URL_IMG_KDO_nLIVRE, imgKdo);
 
             //on charge les images
-            if (e.isSage()){
-                loadImage(Enfant.URL_IMG_SAGE, imgSage);
-            } else {
-                loadImage(Enfant.URL_IMG_PAS_SAGE, imgSage);
-            }
-
-            if (e.isLettreRecu()){
-                loadImage(Enfant.URL_IMG_LETTRE_RECU, imgLettre);
-            } else {
-                loadImage(Enfant.URL_IMG_LETTRE_nRECU, imgLettre);
-            }
-
-            if (e.isCadeauLivre()){
-                loadImage(Enfant.URL_IMG_KDO_LIVRE, imgKdo);
-            } else {
-                loadImage(Enfant.URL_IMG_KDO_nLIVRE, imgKdo);
-            }
+            loadSageImg(imgSage,textSage,e);
+            loadLettreImg(imgLettre, textLettre, e);
+            loadKdoImg(imgKdo, textKdo, e);
         }
 
         return view;
@@ -112,4 +90,35 @@ public class EnfantArrayAdapter extends ArrayAdapter<Enfant> {
                 .resize(150,150)
                 .into(button);
     }
+
+    private void loadSageImg(ImageButton button, TextView textImg, Enfant e){
+        if (e.isSage()){
+            loadImage(Enfant.URL_IMG_SAGE, button);
+            textImg.setText(Enfant.TEXT_SAGE);
+        } else {
+            loadImage(Enfant.URL_IMG_PAS_SAGE, button);
+            textImg.setText(Enfant.TEXT_PAS_SAGE);
+        }
+    }
+
+    private void loadLettreImg(ImageButton button, TextView textImg, Enfant e){
+        if (e.isLettreRecu()){
+            loadImage(Enfant.URL_IMG_LETTRE_RECU, button);
+            textImg.setText(Enfant.TEXT_LETTRE_RECU);
+        } else {
+            loadImage(Enfant.URL_IMG_LETTRE_nRECU, button);
+            textImg.setText(Enfant.TEXT_LETTRE_nRECU);
+        }
+    }
+
+    private void loadKdoImg(ImageButton button, TextView textImg, Enfant e){
+        if (e.isCadeauLivre()){
+            loadImage(Enfant.URL_IMG_KDO_LIVRE, button);
+            textImg.setText(Enfant.TEXT_KDO_LIVRE);
+        } else {
+            loadImage(Enfant.URL_IMG_KDO_nLIVRE, button);
+            textImg.setText(Enfant.TEXT_KDO_nLIVRE);
+        }
+    }
+
 }

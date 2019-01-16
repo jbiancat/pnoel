@@ -6,12 +6,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelSexe"
+        android:text="Sexe :"
+        android:layout_marginStart="4dp"/>
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checkedButton="@id/rball"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_below="@id/labelSexe">
 
         <RadioButton
             android:id="@+id/rball"
@@ -44,7 +51,6 @@
         android:layout_marginEnd="8dp"
         android:layout_below="@+id/radioGroup"/>
 
-
     <RadioGroup
         android:id="@+id/rgSage"
         android:layout_width="wrap_content"
@@ -76,14 +82,20 @@
     </RadioGroup>
 
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelLettre"
+        android:text="Lettre :"
+        android:layout_below="@id/rgSage"
+        android:layout_marginStart="4dp"/>
     <RadioGroup
         android:id="@+id/rgLettre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checkedButton="@id/rbLettreAll"
         android:orientation="horizontal"
-        android:layout_below="@+id/rgSage">
+        android:layout_below="@+id/labelLettre">
 
         <RadioButton
             android:id="@+id/rbLettreAll"
@@ -108,14 +120,20 @@
     </RadioGroup>
 
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelKdo"
+        android:text="Cadeaux :"
+        android:layout_below="@id/rgLettre"
+        android:layout_marginStart="4dp"/>
     <RadioGroup
         android:id="@+id/rgKdo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checkedButton="@id/rbKdoAll"
         android:orientation="horizontal"
-        android:layout_below="@+id/rgLettre">
+        android:layout_below="@+id/labelKdo">
 
         <RadioButton
             android:id="@+id/rbKdoAll"

@@ -7,8 +7,8 @@
     <string name="reset">Reset</string>
     <string name="sage">Sage</string>
     <string name="pas_sage">Pas sage</string>
-    <string name="recu">Reçu</string>
-    <string name="non_recu">Non reçu</string>
+    <string name="recu">Reçue</string>
+    <string name="non_recu">Non reçue</string>
     <string name="cadeaux_non_livres">Non livrés</string>
     <string name="cadeaux_livres">Livrés</string>
 </resources>

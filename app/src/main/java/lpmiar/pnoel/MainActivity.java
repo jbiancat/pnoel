@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private List<String> tab = new ArrayList<>();
     private Integer lastFiltreSexe = null;
     private String lastFiltreDDN = null;
+    private String lastFiltreSage = null;
+    private String lastFiltreLettre = null;
+    private String lastFiltreKdo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        FloatingActionButton action = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        FloatingActionButton action = (FloatingActionButton) findViewById(R.id.filtrerFloatingBtn);
 
         action.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +134,11 @@ public class MainActivity extends AppCompatActivity {
             enfantsAdapter.clear();
             enfantsAdapter.addAll(enfants);
             liste.setAdapter(enfantsAdapter);
+            lastFiltreSexe = null;
+            lastFiltreDDN = null;
+            lastFiltreSage = null;
+            lastFiltreLettre = null;
+            lastFiltreKdo = null;
             return true;
         }
 
@@ -179,8 +187,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 clearFiltre(liste, dataEnfant);
-                lastFiltreSexe = null;
-                lastFiltreDDN = null;
                 myDialog.hide();
             }
         });
